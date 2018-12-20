@@ -1,3 +1,21 @@
+## Usage
+```
+> git clone https://github.com/defsky/chatroom.git
+> cd chatroom
+> composer install
+> php artisan key:generate
+> npm install
+> npm run dev
+> npm run chatserver
+> php artisan serve
+
+... open http://localhost:8000/ from web browser
+```
+
+
+***
+
+
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 <p align="center">
