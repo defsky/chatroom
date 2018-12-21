@@ -8,7 +8,8 @@
                 v-model="message"
                 size="small"
                 resize="false"
-                :style="'width: ' + inputWidth">
+                :style="'width: ' + inputWidth"
+                ref="inputArea">
                 
             </el-input>
             <el-button type="primary" @click="sendMessage">发送</el-button>
@@ -33,8 +34,9 @@
                     // this.$emit('send-message', this.message);
                     // this.$socket.emit('message', {message: this.message});
                     axios.post('/sendmessage', {'message': this.message})
-                    this.message = '';
+                    this.message = ''
                 }
+                this.$refs.inputArea.focus()
             }
         }
     }

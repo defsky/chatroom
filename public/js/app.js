@@ -40763,14 +40763,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var channel = 'public';
     },
     mounted: function mounted() {
-
         // console.log('Message Component mounted.')
     },
 
     props: ['bodyHeight'],
     computed: {},
     methods: {
-        test: function test() {}
+        appendMessage: function appendMessage(message) {
+            this.messages.push(message);
+        }
+    },
+    watch: {
+        messages: function messages() {
+            var _this = this;
+
+            this.$nextTick(function () {
+                // var container = this.$el.querySelector('#messageList')
+                var component = _this.$refs.messageList;
+                component.$el.scrollTop = component.$el.scrollHeight;
+                console.log('scrolled');
+            });
+        }
     },
     sockets: {
         "public:user.login": function publicUserLogin(data) {
@@ -40780,7 +40793,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 title: data.user.name + '(' + data.user.id + ') 加入群聊',
                 body: ''
             };
-            this.messages.push(message);
+            this.appendMessage(message);
         },
         "public:user.logout": function publicUserLogout(data) {
             //console.log(data);
@@ -40788,14 +40801,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 title: data.user.name + '(' + data.user.id + ') 退出群聊',
                 body: ''
             };
-            this.messages.push(message);
+            this.appendMessage(message);
         },
         "public:user.message": function publicUserMessage(data) {
             var message = {
                 title: data.user.name + '(' + data.user.id + ') ' + new Date().toLocaleTimeString(),
                 body: data.message.replace(/\n/g, '<br>')
             };
-            this.messages.push(message);
+            this.appendMessage(message);
         },
         disconnect: function disconnect() {
             axios.post('/userlogout');
@@ -40812,30 +40825,34 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("el-main", { style: "height: " + _vm.bodyHeight + "px" }, [
-    _c(
-      "ul",
-      { staticClass: "message-list" },
-      _vm._l(_vm.messages, function(message) {
-        return _c("li", [
-          message.title
-            ? _c("div", {
-                staticClass: "message-title",
-                domProps: { innerHTML: _vm._s(message.title) }
-              })
-            : _vm._e(),
-          _vm._v(" "),
-          message.body
-            ? _c("div", {
-                staticClass: "message-body",
-                domProps: { innerHTML: _vm._s(message.body) }
-              })
-            : _vm._e()
-        ])
-      }),
-      0
-    )
-  ])
+  return _c(
+    "el-main",
+    { ref: "messageList", style: "height: " + _vm.bodyHeight + "px" },
+    [
+      _c(
+        "ul",
+        { staticClass: "message-list" },
+        _vm._l(_vm.messages, function(message) {
+          return _c("li", [
+            message.title
+              ? _c("div", {
+                  staticClass: "message-title",
+                  domProps: { innerHTML: _vm._s(message.title) }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            message.body
+              ? _c("div", {
+                  staticClass: "message-body",
+                  domProps: { innerHTML: _vm._s(message.body) }
+                })
+              : _vm._e()
+          ])
+        }),
+        0
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -40962,6 +40979,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -40982,6 +41000,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 axios.post('/sendmessage', { 'message': this.message });
                 this.message = '';
             }
+            this.$refs.inputArea.focus();
         }
     }
 });
@@ -41003,6 +41022,7 @@ var render = function() {
         { attrs: { direction: "horizental" } },
         [
           _c("el-input", {
+            ref: "inputArea",
             style: "width: " + _vm.inputWidth,
             attrs: {
               type: "textarea",

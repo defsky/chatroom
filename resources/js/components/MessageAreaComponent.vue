@@ -1,5 +1,5 @@
 <template>
-    <el-main :style="'height: ' + bodyHeight + 'px'">
+    <el-main :style="'height: ' + bodyHeight + 'px'" ref="messageList">
         <ul class="message-list">
             <li v-for="message in messages">
                 <div class="message-title" v-if="message.title" v-html="message.title"></div>
@@ -21,8 +21,6 @@
 
         },
         mounted() {
-
-            
             // console.log('Message Component mounted.')
         },
         props: ['bodyHeight'],
@@ -30,8 +28,18 @@
 
         },
         methods: {
-            test: function () {
-                
+            appendMessage: function (message) {
+                this.messages.push(message);
+            }
+        },
+        watch: {
+            messages () {
+                this.$nextTick(() => {
+                    // var container = this.$el.querySelector('#messageList')
+                    var component = this.$refs.messageList
+                    component.$el.scrollTop = component.$el.scrollHeight
+                    console.log('scrolled')
+                })
             }
         },
         sockets: {
@@ -42,7 +50,7 @@
                     title: data.user.name + '(' + data.user.id + ') 加入群聊',
                     body: ''
                 }
-                this.messages.push(message);
+                this.appendMessage(message)
             },
             "public:user.logout" : function (data) {
                 //console.log(data);
@@ -50,14 +58,14 @@
                     title: data.user.name + '(' + data.user.id + ') 退出群聊',
                     body: ''
                 }
-                this.messages.push(message);
+                this.appendMessage(message)
             },
             "public:user.message" : function (data) {
                 var message = {
                     title: data.user.name + '('+ data.user.id + ') ' + (new Date()).toLocaleTimeString(),
                     body: data.message.replace(/\n/g, '<br>')
                 }
-                this.messages.push(message)
+                this.appendMessage(message)
             },
             disconnect: function () {
                 axios.post('/userlogout')
