@@ -40781,7 +40781,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // var container = this.$el.querySelector('#messageList')
                 var component = _this.$refs.messageList;
                 component.$el.scrollTop = component.$el.scrollHeight;
-                console.log('scrolled');
             });
         }
     },

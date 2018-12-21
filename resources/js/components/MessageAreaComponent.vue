@@ -38,7 +38,6 @@
                     // var container = this.$el.querySelector('#messageList')
                     var component = this.$refs.messageList
                     component.$el.scrollTop = component.$el.scrollHeight
-                    console.log('scrolled')
                 })
             }
         },
